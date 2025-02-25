@@ -12,13 +12,13 @@ from nn_keras_solution import *
 # Feel free to change the default directory to point to where you have
 # stored the datasets.
 #directory = "../synthetic"
-directory = "../uci_datasets"
+directory = "uci_datasets"
 
 
 # Feel free to change the dataset name, so that you can experiment
 # with different datasets.
 #dataset = "synth5"
-dataset = "yeast_string"
+dataset = "yeast"
 training_file = directory + "/" + dataset + "_training.txt"
 test_file = directory + "/" + dataset + "_test.txt"
 
