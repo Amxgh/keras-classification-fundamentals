@@ -1,12 +1,12 @@
 from typing import List
+
+import numpy as np
 from tensorflow import keras
 
 
-import numpy as np
-
-
 def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndarray, layers: int,
-                           units_per_layer: List[int], epochs: int, hidden_activations: List[str]) -> object:
+                           units_per_layer: List[int], epochs: int,
+                           hidden_activations: List[str]) -> keras.models:
     """
     Creates and trains a neural network model.
 
@@ -27,23 +27,37 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
     """
 
     # Let Keras use its default method for initialization of all weights (i.e., your code should not address this issue at all).
-    model = keras.Sequential()
+
+    input_shape = training_inputs[0].shape
+    number_of_classes = np.max([np.max(training_labels)]) + 1
+
+    # model = keras.Sequential(keras.Input(shape=input_shape), keras.layers.Dense(number_of_classes, activation='sigmoid'))
+
     # model.add(keras.layers.Dense(units_per_layer[0], input_dim=training_inputs.shape[1], activation=hidden_activations[0]))
 
+    model_input = [keras.Input(shape=input_shape)]
+
     for units, activation in zip(units_per_layer, hidden_activations):
-        model.add(keras.layers.Dense(units=units, activation=activation))
+        model_input.append(keras.layers.Dense(units=units, activation=activation))
 
-    number_of_classes = len(np.unique(training_labels))
-    model.add(keras.layers.Dense(number_of_classes, activation='softmax'))
+    model_input.append(keras.layers.Dense(number_of_classes, activation='sigmoid'))
 
-    model.compile(optimizer='adam', loss="sparse_categorical_crossentropy", metrics=['accuracy'])
+    model = keras.Sequential(model_input)
+    #
+    # for units, activation in zip(units_per_layer, hidden_activations):
+    #     model.add(keras.layers.Dense(units=units, activation=activation))
+    #
+    # model.add(keras.layers.Dense(number_of_classes, activation='softmax'))
+    #
+    model.compile(optimizer='adam', loss=keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
 
-    model.fit(training_inputs, training_labels, epochs=epochs, verbose=1)
+    model.fit(training_inputs, training_labels, epochs=epochs)
 
     return model
 
 
-def test_model(model: object, test_inputs: np.ndarray, test_labels: np.ndarray, ints_to_labels:dict) -> float:
+def test_model(model: keras.models, test_inputs: np.ndarray, test_labels: np.ndarray,
+               ints_to_labels: dict) -> float:
     """
     Evaluates the trained model on the test set.
 
@@ -55,4 +69,32 @@ def test_model(model: object, test_inputs: np.ndarray, test_labels: np.ndarray, 
         ints_to_labels (dict): Maps int labels to the original class labels
 
     """
-    pass
+    accuracy = []
+
+    for i in range(len(test_inputs)):
+        pred = model.predict(test_inputs[i].reshape(1, -1), verbose=0)
+
+        true_class = ints_to_labels[test_labels[i, 0]]
+
+        has_duplicate = np.count_nonzero(pred == np.argmax(pred))
+
+        pred_class = ints_to_labels[np.argmax(pred)]
+        if has_duplicate > 1:
+            for x in np.where(pred == np.argmax(pred))[0]:
+                if true_class == ints_to_labels[x]:
+                    pred_class = ints_to_labels[x]
+                    break
+
+            accuracy.append(int(true_class == pred_class) / len(np.where(pred == np.argmax(pred))[0]))
+        else:
+            accuracy.append(int(true_class == pred_class))
+
+        pred_class = ints_to_labels[np.argmax(pred)]
+        accuracy.append(pred_class == true_class)
+
+        print('ID=%5d, predicted=%10s, true=%10s, accuracy=%4.2f' %
+              (i, pred_class, true_class, accuracy[i]))
+
+    test_loss, test_accuracy = model.evaluate(test_inputs, test_labels, verbose=0)
+
+    return test_accuracy
