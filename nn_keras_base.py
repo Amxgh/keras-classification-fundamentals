@@ -11,14 +11,14 @@ from nn_keras_solution import *
 
 # Feel free to change the default directory to point to where you have
 # stored the datasets.
-#directory = "../synthetic"
+# directory = "synthetic"
 directory = "uci_datasets"
 
 
 # Feel free to change the dataset name, so that you can experiment
 # with different datasets.
-#dataset = "synth5"
-dataset = "yeast"
+# dataset = "synth5"
+dataset = "yeast_string"
 training_file = directory + "/" + dataset + "_training.txt"
 test_file = directory + "/" + dataset + "_test.txt"
 
@@ -46,17 +46,29 @@ hidden_activations = ['tanh', 'sigmoid']
 
 
 # here is where your create_and_train_model function is called
-model = create_and_train_model(training_inputs, training_labels, layers, 
-                               units_per_layer, epochs, hidden_activations)
+accuracies = []
+for i in range(20):
+    print('Training iteration %d' % (i+1))
+    model = create_and_train_model(training_inputs, training_labels, layers,
+                                   units_per_layer, epochs, hidden_activations)
 
-#test_loss, test_acc = model.evaluate(test_inputs,  test_labels, verbose=0)
-#print('\nTest accuracy: %.2f%%' % (test_acc * 100))
+    #test_loss, test_acc = model.evaluate(test_inputs,  test_labels, verbose=0)
+    #print('\nTest accuracy: %.2f%%' % (test_acc * 100))
 
-#%%
+    #%%
 
-# Testing the model
+    # Testing the model
 
-# here is where your test_model function is called
-test_accuracy = test_model(model, test_inputs,  test_labels, ints_to_labels)
-print('Classification accuracy on test set: %.2f%%' % (test_accuracy * 100))
+    # here is where your test_model function is called
+    test_accuracy = test_model(model, test_inputs,  test_labels, ints_to_labels)
+    print('Classification accuracy on test set: %.2f%%' % (test_accuracy * 100))
+
+    accuracies.append(test_accuracy)
+
+print()
+print()
+print('Mean accuracy: %.2f%%' % (np.mean(accuracies) * 100))
+print("Minimum accuracy: %.2f%% (%d)" % ((np.min(accuracies) * 100), np.count_nonzero(accuracies == np.min(accuracies))))
+print("Maximum accuracy: %.2f%% (%d)" % ((np.max(accuracies) * 100), np.count_nonzero(accuracies == np.max(accuracies))))
+
 
