@@ -16,7 +16,7 @@ def load_mnist() -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
             - test_labels: A 1D NumPy array where test_labels[i] represents the class label for test_inputs[i].
     """
     (training_inputs, training_labels), (test_inputs, test_labels) = keras.datasets.mnist.load_data()
-    # Reshape the data to be 2D arrays
+
     training_inputs = training_inputs.reshape(training_inputs.shape[0], -1)
     test_inputs = test_inputs.reshape(test_inputs.shape[0], -1)
 
@@ -49,14 +49,8 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
         keras.model: The trained model.
     """
 
-    # Let Keras use its default method for initialization of all weights (i.e., your code should not address this issue at all).
-
     input_shape = training_inputs[0].shape
     number_of_classes = np.max([np.max(training_labels)]) + 1
-
-    # model = keras.Sequential(keras.Input(shape=input_shape), keras.layers.Dense(number_of_classes, activation='sigmoid'))
-
-    # model.add(keras.layers.Dense(units_per_layer[0], input_dim=training_inputs.shape[1], activation=hidden_activations[0]))
 
     model_input = [keras.Input(shape=input_shape)]
 
@@ -66,12 +60,7 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
     model_input.append(keras.layers.Dense(number_of_classes, activation='sigmoid'))
 
     model = keras.Sequential(model_input)
-    #
-    # for units, activation in zip(units_per_layer, hidden_activations):
-    #     model.add(keras.layers.Dense(units=units, activation=activation))
-    #
-    # model.add(keras.layers.Dense(number_of_classes, activation='softmax'))
-    #
+
     model.compile(optimizer='adam', loss=keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
 
     model.fit(training_inputs, training_labels, epochs=epochs)
