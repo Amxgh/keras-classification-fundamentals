@@ -23,7 +23,7 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
             Possible values are 'tanh', 'sigmoid', and 'relu'.
 
     Returns:
-        object: The trained model.
+        keras.models: The trained model.
     """
 
     # Let Keras use its default method for initialization of all weights (i.e., your code should not address this issue at all).
@@ -62,7 +62,7 @@ def test_model(model: keras.models, test_inputs: np.ndarray, test_labels: np.nda
     Evaluates the trained model on the test set.
 
     Args:
-        model (object): The trained model.
+        model (keras.models): The trained model.
         test_inputs (np.ndarray): 2D numpy array where each row is a test input vector.
         test_labels (np.ndarray): numpy column vector. 2D numpy array with a single column  where
             test_labels[i, 0] represents the class label for test_inputs[i].
