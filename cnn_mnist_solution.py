@@ -15,7 +15,7 @@ def load_mnist() -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
             - test_labels: A 1D NumPy array where test_labels[i] represents the class label for test_inputs[i].
     """
     (training_inputs, training_labels), (test_inputs, test_labels) = keras.datasets.mnist.load_data()
-    # Reshape the data to be 2D arrays
+
     training_inputs = training_inputs.reshape(training_inputs.shape[0], -1)
     test_inputs = test_inputs.reshape(test_inputs.shape[0], -1)
 
@@ -42,7 +42,7 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
         filter_number (int): The number of 2D convolutional filters in each convolutional layer.
         region_size (int): The size of the region for the max pool layer.
         epochs (int): The number of training epochs.
-        hidden_activations (str): A strings specifying the activation function for each hidden layer.
+        cnn_activation (str): A strings specifying the activation function for each hidden layer.
             Possible values are 'tanh', 'sigmoid', and 'relu'.
 
     Returns:
