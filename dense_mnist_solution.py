@@ -46,7 +46,7 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
             Possible values are 'tanh', 'sigmoid', and 'relu'.
 
     Returns:
-        object: The trained model.
+        keras.model: The trained model.
     """
 
     # Let Keras use its default method for initialization of all weights (i.e., your code should not address this issue at all).
