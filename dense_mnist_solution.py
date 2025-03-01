@@ -17,12 +17,11 @@ def load_mnist() -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
     """
     (training_inputs, training_labels), (test_inputs, test_labels) = keras.datasets.mnist.load_data()
 
-    training_inputs = training_inputs.reshape(training_inputs.shape[0], -1)
-    test_inputs = test_inputs.reshape(test_inputs.shape[0], -1)
+    # training_inputs = training_inputs.reshape(training_inputs.shape[0], -1)
+    # test_inputs = test_inputs.reshape(test_inputs.shape[0], -1)
 
-    max_value = np.max(np.abs(training_inputs))
-    training_inputs = training_inputs.astype('float32') / max_value
-    test_inputs = test_inputs.astype('float32') / max_value
+    training_inputs = training_inputs / 255.0
+    test_inputs = test_inputs / 255.0
 
     return training_inputs, training_labels, test_inputs, test_labels
 
@@ -52,12 +51,12 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
     input_shape = training_inputs[0].shape
     number_of_classes = np.max([np.max(training_labels)]) + 1
 
-    model_input = [keras.Input(shape=input_shape)]
+    model_input = [keras.layers.Flatten(input_shape=(28, 28))]
 
     for units, activation in zip(units_per_layer, hidden_activations):
         model_input.append(keras.layers.Dense(units=units, activation=activation))
 
-    model_input.append(keras.layers.Dense(number_of_classes, activation='sigmoid'))
+    model_input.append(keras.layers.Dense(number_of_classes, activation='softmax'))
 
     model = keras.Sequential(model_input)
 
