@@ -16,15 +16,15 @@ def load_mnist() -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
     """
     (training_inputs, training_labels), (test_inputs, test_labels) = keras.datasets.mnist.load_data()
 
-    training_inputs = training_inputs.reshape(training_inputs.shape[0], -1)
-    test_inputs = test_inputs.reshape(test_inputs.shape[0], -1)
+    # Reshape to include the channel dimension
+    training_inputs = training_inputs.reshape(training_inputs.shape[0], 28, 28, 1)
+    test_inputs = test_inputs.reshape(test_inputs.shape[0], 28, 28, 1)
 
     max_value = np.max(np.abs(training_inputs))
     training_inputs = training_inputs.astype('float32') / max_value
     test_inputs = test_inputs.astype('float32') / max_value
 
     return training_inputs, training_labels, test_inputs, test_labels
-
 
 
 def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndarray, blocks: int,
@@ -48,3 +48,23 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
     Returns:
         keras.model: The trained model.
     """
+
+    input_shape = training_inputs[0].shape
+    number_of_classes = np.max([np.max(training_labels)]) + 1
+
+    model_input = [keras.layers.Input(shape=input_shape)]
+
+    for i in range(blocks):
+        model_input.append(keras.layers.Conv2D(filter_number, filter_size, activation=cnn_activation))
+        model_input.append(keras.layers.MaxPooling2D(region_size))
+
+    model_input.append(keras.layers.Flatten())
+    model_input.append(keras.layers.Dense(number_of_classes, activation='softmax'))
+
+    model = keras.Sequential(model_input)
+
+    model.compile(optimizer='adam', loss=keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
+
+    model.fit(training_inputs, training_labels, epochs=epochs)
+
+    return model
