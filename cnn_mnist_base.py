@@ -20,13 +20,25 @@ region_size = 2
 epochs = 20
 cnn_activation = 'relu'
 
-# here is where your create_and_train_model function is called
-model = create_and_train_model(training_inputs, training_labels, blocks, 
-                               filter_size, filter_number, region_size, 
-                               epochs, cnn_activation)
 
-#
-test_loss, test_acc = model.evaluate(test_inputs,  test_labels, verbose=0)
-print('\nTest accuracy: %.2f%%' % (test_acc * 100))
+
+accuracies = []
+for i in range(3):
+    # here is where your create_and_train_model function is called
+    model = create_and_train_model(training_inputs, training_labels, blocks,
+                                   filter_size, filter_number, region_size,
+                                   epochs, cnn_activation)
+
+    #
+    test_loss, test_acc = model.evaluate(test_inputs,  test_labels, verbose=0)
+    print('\nTest accuracy: %.2f%%' % (test_acc * 100))
+
+    accuracies.append(test_acc)
 
 #%%
+
+print("Mean accuracy: ", np.mean(accuracies))
+print("Std accuracy: ", np.std(accuracies))
+print("Max accuracy: ", np.max(accuracies))
+print("Min accuracy: ", np.min(accuracies))
+print(accuracies)
