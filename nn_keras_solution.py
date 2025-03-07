@@ -34,7 +34,7 @@ def create_and_train_model(training_inputs: np.ndarray, training_labels: np.ndar
     for units, activation in zip(units_per_layer, hidden_activations):
         model_input.append(keras.layers.Dense(units=units, activation=activation))
 
-    model_input.append(keras.layers.Dense(number_of_classes, activation='sigmoid'))
+    model_input.append(keras.layers.Dense(number_of_classes, activation='softmax'))
 
     model = keras.Sequential(model_input)
 
