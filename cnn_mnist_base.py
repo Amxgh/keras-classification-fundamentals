@@ -1,3 +1,5 @@
+# This file was written by Dr. Vassilis Athitsos
+
 from tensorflow import keras
 import numpy as np
 
