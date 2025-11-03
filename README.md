@@ -4,7 +4,7 @@ This repository contains implementations of **Fully Connected (Dense) Neural Net
 
 ---
 
-## 🧠 Core Concepts and Theory
+## Core Concepts and Theory
 
 ### 1. Fully Connected (Dense) Neural Networks
 A Dense Network, or Multilayer Perceptron (MLP), is the foundational architecture of neural networks.
@@ -32,7 +32,7 @@ Activation functions introduce non-linearity into the network, allowing it to le
 
 ---
 
-## 📂 Project Structure and File Descriptions
+## Project Structure and File Descriptions
 
 | File Name | Description | Key Components |
 | :--- | :--- | :--- |
@@ -57,7 +57,7 @@ To run the experiments, you need a standard Python environment with NumPy and Te
 
 *(Note: TensorFlow will automatically install Keras.)*
 
-## 🚀 Running the Experiments
+## Running the Experiments
 
 The project is structured so that you can run the *base* files to execute the corresponding experiments.
 
